@@ -1,0 +1,257 @@
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Description: Configuration of all three sleep modes (S2 is not supported):
+## S1 sleep (only ACPI) low wake-up latency,
+## S3 (ACPI) suspend to ram or (on APM systems) standby and
+## S4 (ACPI) suspend to disk or (on APM systems) suspend.
+## 
+## For some hardware, modules have to be unloaded before entering the
+## sleep state. You can configure these in this section. These modules
+## will be unloaded in the specified order. Modules which depend on one
+## of the specified modules, will also be unloaded. If not all modules
+## can be unloaded, entering the sleep state will fail.
+## After resuming, the modules that have been unloaded will be reloaded
+## in reverse order.
+## The same applies for the "SERVICES_TO_RESTART"-variables which defines
+## services which have to be stopped before entering a sleep state.
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+### Type:        	string
+## Default:     	"usb_storage sbp2 ohci_hcd uhci_hcd stir4200 ohci1394 rt2500 prism54 ath_pci r8169 lt_modem Intel536 Intel537 ndiswrapper"
+## ServiceRestart: 	
+#
+# These modules will be unloaded before entering suspend to disk
+# See README.unload-modules for more information.
+# "NONE" means don't unload any modules.
+UNLOAD_MODULES_BEFORE_SUSPEND2DISK=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+### Type:        	string
+## Default:     	"usb_storage sbp2 ohci_hcd uhci_hcd stir4200 ohci1394 rt2500 prism54 ath_pci r8169 lt_modem Intel536 Intel537 ndiswrapper"
+## ServiceRestart: 	
+#
+# These modules will be unloaded before entering the corresponding
+# sleep state. See README.unload-modules for more information.
+# "NONE" means don't unload any modules.
+UNLOAD_MODULES_BEFORE_SUSPEND2RAM=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+### Type:        	string
+## Default:     	"usb_storage sbp2 ohci_hcd uhci_hcd stir4200 ohci1394 rt2500 prism54 ath_pci r8169 lt_modem Intel536 Intel537 ndiswrapper"
+## ServiceRestart: 	
+#
+# These modules will be unloaded before entering the corresponding
+# sleep state. See README.unload-modules for more information.
+# "NONE" means don't unload any modules.
+UNLOAD_MODULES_BEFORE_STANDBY=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	string
+## Default:     	"slmodemd irda upsd apcupsd anacron"
+#
+# All services that have to be stopped before entering a sleep mode
+# and restarted after the machine resumes.
+# If you notice problems of some services that may be related to 
+# suspend/standby, restarting the service may solve the problem.
+# The names to enter here are simply the filenames of the init scripts
+# in /etc/init.d. The services are stopped in the order entered here.
+# They are restarted after resume in the reverse order.
+# Entering "NONE" disables restarting of services ("" means default).
+SUSPEND2DISK_RESTART_SERVICES="toshibabacklight"
+SUSPEND2RAM_RESTART_SERVICES="toshibabacklight"
+STANDBY_RESTART_SERVICES=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	yesno
+## Default:     	"yes"
+#
+# Should FAT and NTFS filesystems be unmounted before entering
+# a sleep mode and remounted after the machine resumed?
+# You should do this for suspend to disk if you want to boot
+# Windows while Linux is suspended to avoid severe data corruption
+# on the Windows filesystems.
+# Note that suspend will fail if the partitions cannot be unmounted.
+# This may cause problems with external storage media connected during
+# suspend.
+# Defaults to yes for suspend to disk, no for suspend to RAM / standby.
+SUSPEND2DISK_UNMOUNT_FATFS=""
+SUSPEND2RAM_UNMOUNT_FATFS=""
+STANDBY_UNMOUNT_FATFS=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	yesno
+## Default:     	"no"
+#
+# Should PCMCIA cards (CardBus and PC-Card) be ejected before entering
+# a sleep mode and reinserted after the machine resumed?
+# This should not be necessary for most CardBus cards, PC-Cards seem to
+# need this more often.
+SUSPEND2DISK_EJECT_PCMCIA=""
+SUSPEND2RAM_EJECT_PCMCIA=""
+STANDBY_EJECT_PCMCIA=""
+
+## Path:		System/Powermanagement/Powersave/Sleep_Modes
+## Type:		yesno
+## Default:		"no"
+## ServiceRestart: 	powersaved
+#
+# Set this variable to yes to disable suspend to disk.
+DISABLE_USER_SUSPEND2DISK=""
+
+## Path:		System/Powermanagement/Powersave/Sleep_Modes
+## Type:		yesno
+## Default:		"no"
+## ServiceRestart: 	powersaved
+#
+# Set this variable to no to enable suspend to RAM.
+# If the /usr/sbin/s2ram binary is available, it will be used to detect
+# if the machine is capable of suspend to RAM. You can override this
+# detection with SUSPEND2RAM_FORCE below.
+DISABLE_USER_SUSPEND2RAM=""
+
+## Path:		System/Powermanagement/Powersave/Sleep_Modes
+## Type:		yesno
+## Default:		"no"
+## ServiceRestart:	powersaved
+#
+# If /usr/sbin/s2ram is installed but does not know about your machine,
+# you can force suspend to RAM for unknown machines by setting this
+# variable to yes.
+# Be careful, this might crash your machine.
+# See also the SUSPEND2RAM_ACPI_SLEEP, SUSPEND2RAM_VBE_POST and
+# SUSPEND2RAM_VBE_SAVE variables.
+SUSPEND2RAM_FORCE=""
+
+## Path:		System/Powermanagement/Powersave/Sleep_Modes
+## Type:		integer(0:3)
+## Default:		"0"
+## ServiceRestart:	powersaved
+#
+# If SUSPEND2RAM_FORCE is set to yes and s2ram is installed, you can set
+# the acpi_sleep parameter here. This is a number, 1 means "s3_bios",
+# 2 means "s3_mode" 3 means "s3bios,s3mode".
+# These parameters are explained in the kernel sources under
+# Documentation/power/video.txt
+# Leaving this empty or setting it to 0 means "don't touch this setting",
+# you might still have one of the options set from the kernel commandline.
+# Be careful, this might crash your machine.
+SUSPEND2RAM_ACPI_SLEEP=""
+
+## Path:		System/Powermanagement/Powersave/Sleep_Modes
+## Type:		yesno
+## Default:		"no"
+## ServiceRestart: 	powersaved
+#
+# if SUSPEND2RAM_FORCE is set to yes and s2ram is installed, you can enable
+# the equivalent of "vbetool vbestate save/restore" before/after suspend to
+# RAM with this variable. This does restore the state of the graphics chip
+# on many machines.
+# Be careful, this might crash your machine.
+SUSPEND2RAM_VBE_SAVE=""
+
+## Path:		System/Powermanagement/Powersave/Sleep_Modes
+## Type:		yesno
+## Default:		"no"
+## ServiceRestart: 	powersaved
+#
+# if SUSPEND2RAM_FORCE is set to yes and s2ram is installed, you can enable
+# the equivalent of "vbetool post" after suspend to RAM. This reinitializes
+# the graphics chip on many machines.
+# Be careful, this might crash your machine.
+SUSPEND2RAM_VBE_POST=""
+
+## Path:		System/Powermanagement/Powersave/Sleep_Modes
+## Type:		yesno
+## Default:		"yes"
+## ServiceRestart: 	powersaved
+#
+# Set this variable to no to enable standby (also needs BIOS support!)
+DISABLE_USER_STANDBY=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	string(platform,firmware,shutdown,reboot)
+## Default:     	"platform"
+#
+# Specify the shutdown method the kernel uses after suspend-to-disk.
+# "shutdown" is known to work on most machines, "platform" may work,
+# too. "firmware" will most likely not work, "reboot" is for
+# debugging only. Use only if you know what this is for.
+# This has no effect for userspace suspend. Use /etc/uswsusp.conf there.
+SUSPEND2DISK_SHUTDOWN_MODE=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	yesno
+## Default:     	"no"
+#
+# Should the system clock be reset from the hardware clock after
+# suspend-to-disk or suspend-to-RAM? This may be unneccessary depending
+# on kernel version and SUSPEND2DISK_SHUTDOWN_MODE, but will not hurt.
+SUSPEND2DISK_RESTORE_CLOCK=""
+SUSPEND2RAM_RESTORE_CLOCK=""
+STANDBY_RESTORE_CLOCK=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	yesno
+## Default:     	"no"
+#
+# Should we suspend to disk even if it seems the kernel in /boot
+# is not matching the running kernel? This is very dangerous, if
+# the kernels don't match, resume will not work. Use only if you
+# absolutely need to (e.g. you are compiling a custom kernel).
+#
+SUSPEND2DISK_IGNORE_KERNEL_MISMATCH=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	yesno
+## Default:     	"no"
+#
+# Should we switch to a text console _in userspace_ before entering
+# a sleep mode? The kernel usually does this anyway, but if you need
+# to run some initialization code before switching back to X, this
+# might be handy. Also on ppc, the kernel does not switch, so this needs
+# to be "yes" there.
+SUSPEND2DISK_SWITCH_VT="yes"
+SUSPEND2RAM_SWITCH_VT="yes"
+STANDBY_SWITCH_VT=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	integer
+## Default:     	500
+#
+# The size of the image in MB that will be written to disk upon suspend.
+# A bigger image will make your system feel more responsive after resume,
+# but take additional time for writing and reading your data.
+# This value specifies the maximum image size to use. The image can be
+# smaller if not enough swap is available or memory usage is low, it also
+# can be bigger if the size is not enough for suspending the machine.
+# setting it to "0" will restore the old behaviour and always create the
+# smallest possible image.
+# This has no effect for userspace suspend. Use /etc/uswsusp.conf there.
+SUSPEND2DISK_IMAGE_SIZE=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	string
+## Default:     	""
+#
+# to make sure that there is enough swap available, you can configure an
+# additional swap partition, which will only be used for suspend. This
+# partition should not be in /etc/fstab and should not normally be used.
+# Its size should be the amount of physical RAM the machine has, or at
+# least SUSPEND2DISK_IMAGE_SIZE.
+# Enter the device node of this partition here to have it activated before
+# suspend and deactivated after resume.
+# You also need to make sure that the resume= boot parameter points to
+# this partition.
+SUSPEND2DISK_RESUME_DEVICE=""
+
+## Path:        	System/Powermanagement/Powersave/Sleep_Modes
+## Type:        	string
+## Default:     	"kernel"
+#
+# choose the method used to suspend to disk. There are two choices:
+# - the shiny new userspace suspend. Needs the "uswsusp" package
+#   installed and configured in /etc/uswsusp.conf. Is much faster
+#   and generally considered "state of the art". Needs a recent kernel
+#   2.6.17+
+# - the old in-kernel suspend, that's proven, reliable and slow.
+# Since uswsusp is still new, "kernel" is default.
+SUSPEND2DISK_METHOD=""

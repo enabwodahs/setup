@@ -2,6 +2,7 @@
 
 import subprocess
 import sys
+import shutil
 
 if sys.version_info < (2,7):
 	def check_output(cmd):
@@ -21,4 +22,15 @@ if check_output("hostname").strip() != "shadow":
 # chicken and egg issue... 
 subprocess.check_call( './setup-git-for-github.py' )
 
+# copy hosts file in to place
+# TODO: make this generate dynamically instead
+shutil.copyfile( './files-for-shadow/hosts', '/etc' )
+shutil.copyfile( './files-for-shadow/avrdude.conf', '/etc' )
+shutil.copyfile( './files-for-shadow/toshibabacklight', '/etc/init.d')
+
+try:
+	os.mkdir( '/etc/powersave' )
+except OSError:
+	pass
+shutil.copyfile( './files-for-shadow/sleep', '/etc/powersave' )
 
