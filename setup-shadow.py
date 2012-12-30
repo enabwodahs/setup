@@ -17,4 +17,8 @@ else:
 if check_output("hostname").strip() != "shadow":
 	exit(0)
 
+# config for gethub... silly since the files came from there...sigh..
+# chicken and egg issue... 
+subprocess.check_call( './setup-git-for-github.py' )
+
 
